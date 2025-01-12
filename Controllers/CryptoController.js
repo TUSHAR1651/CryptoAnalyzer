@@ -2,7 +2,7 @@ const axios = require('axios');
 const CryptoCurrency = require('../Models/CryptoModel');
 const cron = require('node-cron');
 function fetchCryptoData() {
-    cron.schedule('* * * * *' ,  async () => {
+    cron.schedule('0 */2 * * *' ,  async () => {
         
         try{
             const response = await axios.get('https://api.coingecko.com/api/v3/simple/price', {
@@ -35,7 +35,20 @@ function fetchCryptoData() {
 }
 
 const stats = async function(req , res){
-    console.log(req.query);
+    console.log(req.body);
+    const { coin } = req.query;
+    try {
+        const data = await CryptoCurrency.findOne({ coin }).sort({ timestamp: -1 });
+        if (!data) return res.status(404).json({ error: 'Coin data not found' });
+
+        res.json({
+            price: data.price,
+            marketCap: data.marketCap,
+            '24hChange': data.change24h,
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    } 
 }
 
 
