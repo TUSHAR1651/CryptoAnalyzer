@@ -2,7 +2,7 @@ const axios = require('axios');
 const CryptoCurrency = require('../Models/CryptoModel');
 const cron = require('node-cron');
 function fetchCryptoData() {
-    cron.schedule('0 */2 * * *' ,  async () => {
+    cron.schedule('* * * * *' ,  async () => {
         
         try{
             const response = await axios.get('https://api.coingecko.com/api/v3/simple/price', {

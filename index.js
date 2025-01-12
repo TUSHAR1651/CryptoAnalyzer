@@ -2,16 +2,21 @@ const monogoose = require('mongoose');
 const cors = require('cors');
 const express = require('express');
 const app = express();
-const port = 3000;
+
 const CryptoRouter = require('./Routes/CryptoRoute');
 const {fetchCryptoData} = require('./Controllers/CryptoController');
-
+const dotenv = require('dotenv');
 app.use(cors());
 app.use(express.json());
 
+dotenv.config();
+const PORT = process.env.PORT;
+const URL = process.env.DB_URL;
+
+
 app.use('/crypto', CryptoRouter);
 
-monogoose.connect('mongodb://127.0.0.1:27017/CurrencyDB')
+monogoose.connect(URL)
 .then(() => {
     console.log("connected to Mongo DB");
 })
@@ -22,7 +27,7 @@ monogoose.connect('mongodb://127.0.0.1:27017/CurrencyDB')
 
 
 
-app.listen(port , () => {
+app.listen(PORT , () => {
     console.log("Server Started");
 });
 
